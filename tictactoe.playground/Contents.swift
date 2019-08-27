@@ -236,12 +236,12 @@ while !game.checkEnd() && !indices.isEmpty {
 }
 
 switch(game.isXWinner) {
-case true:
-    print("The winner is X")
-case false:
-    print("The winner is O")
+case .some(let x):
+    if x {
+        print("The winner is X")
+    } else {
+        print("The winner is O")
+    }
 case nil:
     print("No winner")
-default:
-    print("Invalid case")
 }
