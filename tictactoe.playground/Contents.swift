@@ -55,7 +55,7 @@ struct Matrix {
     init(_ type: BoardType) {
         self.boardType = type
         boardSize = type.rawValue
-        board = Array(repeating: "_", count: boardSize * boardSize)
+        board = Array(repeating: " ", count: boardSize * boardSize)
     }
     
     subscript(index: MatrixIndex) -> Character {
@@ -82,7 +82,7 @@ struct Matrix {
 struct TicTacToe {
     var matrix: Matrix
     var isXWinner: Bool?
-    var lastStep: MatrixIndex? = nil
+    var lastStep: MatrixIndex?
     
     var tracker: GameTracking?
     
@@ -190,6 +190,7 @@ struct TicTacToe {
         return isEnd
     }
 }
+    
 
 extension TicTacToe: Game {
     var name: String {
@@ -197,14 +198,26 @@ extension TicTacToe: Game {
     }
     
     var state: String {
-        var str = ""
-        for i in 0 ..< matrix.board.count {
-            if i % matrix.boardSize == 0 {
-                str += "\n"
+        let firstLine = "┏━━━" + String(repeating: "┳━━━", count: matrix.boardSize - 1) + "┓"
+        let verticalSeparatingLine = "┣━━━" + String(repeating: "╋━━━", count: matrix.boardSize - 1) + "┫"
+        let lastLine = "┗━━━" + String(repeating: "┻━━━", count: matrix.boardSize - 1) + "┛"
+        
+        var lines = [firstLine]
+        
+        for i in 0 ..< matrix.boardSize {
+            var line = ""
+            for j in 0 ..< matrix.boardSize {
+                line += "┃ " + String(matrix[MatrixIndex(i, j)]) + String(" ")
             }
-            str += (String(matrix.board[i]) + " ")
+            line += "┃"
+            lines += [line]
+            if i != matrix.boardSize - 1 {
+                lines += [verticalSeparatingLine]
+            }
         }
-        return str
+    
+    lines += [lastLine]
+    return lines.joined(separator: "\n")
     }
 }
 
@@ -232,4 +245,3 @@ case nil:
 default:
     print("Invalid case")
 }
-
